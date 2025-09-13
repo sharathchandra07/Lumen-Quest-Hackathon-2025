@@ -1,0 +1,133 @@
+User
+
+package com.lumen.subscription.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Data
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+    private String name;
+    @Column(unique = true)
+    private String email;
+    private String passwordHash;
+    private String role; // "end-user", "admin"
+}
+
+
+UsgaeHistory
+
+package com.lumen.subscription.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Data
+public class UsageHistory {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long usageId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sub_id")
+    private Subscription subscription;
+    private Double dataUsed; // GB
+    private Integer month;
+    private Integer year;
+}
+
+
+Subscription
+
+package com.lumen.subscription.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import java.util.Date;
+
+@Entity
+@Data
+public class Subscription {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long subId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plan_id")
+    private Plan plan;
+    private Date startDate;
+    private Date endDate;
+    private String status; // "active", "cancelled", "expired"
+    private Boolean autoRenew;
+}
+
+Plan 
+
+package com.lumen.subscription.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Data
+public class Plan {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long planId;
+    private String name;
+    private String description;
+    private Integer quota; // GB/month
+    private Double price;
+    private Integer durationMonths = 1;
+    private String status; // "active", "inactive"
+}
+
+Discount
+
+package com.lumen.subscription.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import java.util.Date;
+
+@Entity
+@Data
+public class Discount {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long discountId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plan_id")
+    private Plan plan;
+    private String type; // "percentage", "fixed"
+    private Double value;
+    private Date startDate;
+    private Date endDate;
+}
+
+Audit Log
+
+package com.lumen.subscription.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import java.util.Date;
+
+@Entity
+@Data
+public class AuditLog {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long logId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "actor_id")
+    private User actor;
+    private String action;
+    private Date timestamp;
+}
