@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Recommendation System</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 500px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        label { display: block; margin-top: 15px; color: #555; }
+        input[type="number"], input[type="text"] { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        button { margin-top: 20px; width: 100%; padding: 10px; background: #007bff; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .results { margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background: #007bff; color: #fff; }
+        .error { color: red; margin-top: 15px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Hybrid Recommendation System</h2>
+        <form method="post" action="/recommend">
+            <label for="user_id">User ID:</label>
+            <input type="number" id="user_id" name="user_id" required>
+            <label for="plan_index">Plan Index:</label>
+            <input type="number" id="plan_index" name="plan_index" required>
+            <label for="top_n">Number of Recommendations:</label>
+            <input type="number" id="top_n" name="top_n" value="5" min="1" max="20">
+            <button type="submit">Get Recommendations</button>
+        </form>
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        {% if results %}
+        <div class="results">
+            <h3>Recommendations</h3>
+            <table>
+                <tr>
+                    <th>Subscription Id</th>
+                    <th>Subscription Type</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                </tr>
+                {% for row in results %}
+                <tr>
+                    <td>{{ row['Subscription Id'] }}</td>
+                    <td>{{ row['Subscription Type'] }}</td>
+                    <td>{{ row['amount'] }}</td>
+                    <td>{{ row['Price'] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
